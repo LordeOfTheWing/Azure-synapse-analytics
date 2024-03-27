@@ -1,0 +1,17 @@
+{
+	"name": "1 - Data Exploration",
+	"properties": {
+		"content": {
+			"query": "SELECT *\nFROM OPENROWSET(\n    BULK 'https://saprojectmaestrosnd.blob.core.windows.net/raw/Unemployment.csv', \n    FORMAT='CSV',\n    HEADER_ROW = TRUE,\n    PARSER_VERSION = '2.0'\n) AS [result];\n\n\nSELECT COUNT(*)\nFROM OPENROWSET(\n    BULK 'https://saprojectmaestrosnd.blob.core.windows.net/raw/Unemployment.csv',\n    FORMAT='CSV',\n    PARSER_VERSION = '2.0'\n) AS [DATA]; -- 1545 records\n\nSELECT industry, unemployed\nFROM OPENROWSET(\n    BULK 'https://saprojectmaestrosnd.blob.core.windows.net/raw/Unemployment.csv',\n    FORMAT='CSV',\n    PARSER_VERSION = '2.0'\n) WITH (industry VARCHAR(255),\n    unemployed INT)\nAS data;\n\n------CREATE DATABASE---------\nCREATE DATABASE PROJECTDB;\n\n\n\n\n\n\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
