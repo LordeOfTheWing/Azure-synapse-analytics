@@ -1,0 +1,17 @@
+{
+	"name": "2 - Creating External Datasource",
+	"properties": {
+		"content": {
+			"query": "-- CREATING EXTERNAL DATASOURCE\n\nCREATE EXTERNAL DATA SOURCE raw_container\nWITH (\n    LOCATION = 'abfss://raw@saprojectmaestrosnd.dfs.core.windows.net/'\n);\n\n-- USING EXTERNAL DATASOURCE\nSELECT *\nFROM \nOPENROWSET(\n    BULK 'Unemployment.csv',\n    DATA_SOURCE = 'raw_container', \n    FORMAT = 'CSV',\n    HEADER_ROW = TRUE,\n    PARSER_VERSION = '2.0'\n) AS DATA",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "project_db",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
