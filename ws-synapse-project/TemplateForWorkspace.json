@@ -99,12 +99,32 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "SELECT *\nFROM OPENROWSET(\n    BULK 'https://saprojectmaestrosnd.blob.core.windows.net/raw/Unemployment.csv', \n    FORMAT='CSV',\n    HEADER_ROW = TRUE,\n    PARSER_VERSION = '2.0'\n) AS [result];\n\n\nSELECT COUNT(*)\nFROM OPENROWSET(\n    BULK 'https://saprojectmaestrosnd.blob.core.windows.net/raw/Unemployment.csv',\n    FORMAT='CSV',\n    PARSER_VERSION = '2.0'\n) AS [DATA]; -- 1545 records\n\nSELECT industry, unemployed\nFROM OPENROWSET(\n    BULK 'https://saprojectmaestrosnd.blob.core.windows.net/raw/Unemployment.csv',\n    FORMAT='CSV',\n    PARSER_VERSION = '2.0'\n) WITH (industry VARCHAR(255),\n    unemployed INT)\nAS data;\n\n------CREATE DATABASE---------\nCREATE DATABASE PROJECTDB;\n\n\n\n\n\n\n\n",
+					"query": "SELECT *\nFROM OPENROWSET(\n    BULK 'https://saprojectmaestrosnd.blob.core.windows.net/raw/Unemployment.csv', \n    FORMAT='CSV',\n    HEADER_ROW = TRUE,\n    PARSER_VERSION = '2.0'\n) AS [result];\n\n\nSELECT COUNT(*)\nFROM OPENROWSET(\n    BULK 'https://saprojectmaestrosnd.blob.core.windows.net/raw/Unemployment.csv',\n    FORMAT='CSV',\n    PARSER_VERSION = '2.0'\n) AS [DATA]; -- 1545 records\n\nSELECT industry, unemployed\nFROM OPENROWSET(\n    BULK 'https://saprojectmaestrosnd.blob.core.windows.net/raw/Unemployment.csv',\n    FORMAT='CSV',\n    PARSER_VERSION = '2.0'\n) WITH (industry VARCHAR(255),\n    unemployed INT)\nAS data;\n\n------CREATE DATABASE---------\nCREATE DATABASE pro;ject_db;\n\n--- FIXING THE COLLATION ERRORS EXPLICITLY\n\nSELECT data.industry, data.unemployed\nFROM OPENROWSET(\n    BULK 'https://saprojectmaestrosnd.blob.core.windows.net/raw/Unemployment.csv',\n    FORMAT='CSV',\n    PARSER_VERSION = '2.0'\n) WITH (industry VARCHAR(255) COLLATE Latin1_General_100_CI_AS_KS_SC_UTF8,\n    unemployed VARCHAR(255) COLLATE Latin1_General_100_CI_AS_KS_SC_UTF8)\nAS data;\n\n--CHANGE COLLATION FOR ENTIRE DATABASE\n\nALTER DATABASE project_db\nCOLLATE Latin1_General_100_CI_AS_KS_SC_UTF8;\n\n\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://saprojectmaestrosnd.blob.core.windows.net/raw/Unemployment.csv',\n    FORMAT='CSV',\n    HEADER_ROW = TRUE,\n    PARSER_VERSION = '2.0'\n) AS [DATA];\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
 					"metadata": {
 						"language": "sql"
 					},
 					"currentConnection": {
-						"databaseName": "master",
+						"databaseName": "project_db",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/2 - Creating External Datasource')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- CREATING EXTERNAL DATASOURCE\n\nCREATE EXTERNAL DATA SOURCE raw_container\nWITH (\n    LOCATION = 'abfss://raw@saprojectmaestrosnd.dfs.core.windows.net/'\n);\n\n-- USING EXTERNAL DATASOURCE\nSELECT *\nFROM \nOPENROWSET(\n    BULK 'Unemployment.csv',\n    DATA_SOURCE = 'raw_container', \n    FORMAT = 'CSV',\n    HEADER_ROW = TRUE,\n    PARSER_VERSION = '2.0'\n) AS DATA",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "project_db",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
