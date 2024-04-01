@@ -1,0 +1,17 @@
+{
+	"name": "4 - Creating External Table",
+	"properties": {
+		"content": {
+			"query": "--Creating an External Table\n\nCREATE EXTERNAL TABLE ext_unemployment\nWITH (\n    LOCATION='ExtNew',\n    DATA_SOURCE = refined,\n    FILE_FORMAT = format_parquet\n) AS SELECT [Line Number],[Year],[Month],[State],[Labor Force],[Employed],[Unemployed],[Unemployment Rate],[Industry],[Gender],[Education Level],\n\t[Date Inserted],[Aggregation Level],[Data Accuracy]\nFROM \nOPENROWSET(\n    BULK 'Unemployment.csv',\n    DATA_SOURCE = 'raw_container', \n    FORMAT = 'CSV',\n    HEADER_ROW = TRUE,\n    PARSER_VERSION = '2.0'\n) as [data];",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "project_db",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
