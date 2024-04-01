@@ -1,0 +1,17 @@
+{
+	"name": "3 - Creating External FIle format",
+	"properties": {
+		"content": {
+			"query": "-- Creating PARQUET File Format\nCREATE EXTERNAL FILE FORMAT format_parquet\nWITH(\nFORMAT_TYPE=PARQUET,\nDATA_COMPRESSION='org.apache.hadoop.io.compress.SnappyCodec'\n);\n\n-- External Data Source\n\nCREATE EXTERNAL DATA SOURCE refined\nWITH(\n    LOCATION='abfss://refined@saprojectmaestrosnd.dfs.core.windows.net'\n);",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "project_db",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
